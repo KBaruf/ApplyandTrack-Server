@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -9,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    require: [true, 'Please Provide Email'],
+    required: [true, 'Please Provide Email'],
     match: [/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, 'Please Provide matching email'],
     unique: true,
     minlength: 3,
@@ -17,10 +19,18 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    require: [true, 'Please Provide password'],
+    required: [true, 'Please Provide password'],
     minlength: 6,
-    maxlength: 15,
   },
 });
 
-module.exports = mongoose.model('User', JobsSchema);
+UserSchema.pre('save', function (next) {
+  const salt = bcrypt.genSaltSync(10);
+  this.password = bcrypt.hashSync(this.password, salt);
+  next();
+});
+UserSchema.methods.createJWT = function () {
+  return jwt.sign({ userId: this._id, name: this.name }, 'secret', { expiresIn: '30days' });
+};
+
+module.exports = mongoose.model('User', UserSchema);
