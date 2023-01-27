@@ -5,9 +5,11 @@ const getAllJobs = (req, res) => {
 const getJob = (req, res) => {
   res.send('getjob');
 };
-const createJob = (req, res) => {
-  const jobs = Jobs.create(req.body);
-  res.json({ jobs });
+const createJob = async (req, res) => {
+  // const jobs = Jobs.create(req.body);
+  // res.json({ jobs });
+  // res.send('job created');
+  res.json(req.user);
 };
 const updateJob = (req, res) => {
   res.send('updateJob');
