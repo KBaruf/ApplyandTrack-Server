@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
 
 const JobsSchema = mongoose.Schema({
-  jobs: {
+  company: {
     type: String,
-    required: [true, 'You must Provide a job'],
+    required: [true, 'Please Provide the Company name'],
+    maxlength: 50,
   },
-  location: {
+  position: {
     type: String,
-    require: [true, 'You must provide a location'],
+    required: [true, 'Please Provide position'],
+    maxlength: 50,
+  },
+  status: {
+    type: String,
+    enum: ['Please Provide the Company name'],
   },
 });
 
